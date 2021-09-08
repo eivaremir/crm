@@ -60,6 +60,10 @@ class Accounts(models.Model):
     class Meta:
         managed = False
         db_table = 'ACCOUNTS'
+
+
+    def __str__(self):
+        return f"{self.account_number} - {self.account_name }"
         
 
 
@@ -135,6 +139,9 @@ class Symbols(models.Model):
         db_table = 'SYMBOLS'
 
 
+    def __str__(self):
+        return self.name
+
 class SymbolsGroups(models.Model):
     description = models.CharField(max_length=40)
     id_symbol_group = models.IntegerField(primary_key=True)
@@ -142,6 +149,9 @@ class SymbolsGroups(models.Model):
     class Meta:
         managed = False
         db_table = 'SYMBOLS_GROUPS'
+
+    def __str__(self):
+        return self.description
 
 
 class Tickets(models.Model):
