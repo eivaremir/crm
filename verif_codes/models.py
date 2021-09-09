@@ -30,7 +30,7 @@ class VerificationCodes(models.Model):
     expiration_date = models.DateTimeField()
     entity_type = models.ForeignKey(ParamsVerificationEntityTypes, models.DO_NOTHING, db_column='entity_type', blank=True, null=True)
     code_type = models.ForeignKey(ParamsVerificationCodeTypes, models.DO_NOTHING, db_column='code_type', blank=True, null=True)
-
+    message_id = models.CharField(max_length=45, blank=True, null=True)
 
     def __str__(self):
         return f"VCODE {self.code} <{self.identity}>"

@@ -15,8 +15,8 @@ from django.contrib.auth.models import User
 @admin.register(VerificationCodes)
 class VerificationCodesAdmin(admin.ModelAdmin):
     
-    list_display = ('code','code_type','identity','entity_type','expiration_date')
-    #list_display_links = ('code','identity')
+    list_display = ('message_id','code','code_type','identity','entity_type','expiration_date')
+    list_display_links = ('code','message_id')
     verbose_name = "Verification Codes"
     list_filter = ('entity_type','code_type')
     search_fields = ('code','identity')
