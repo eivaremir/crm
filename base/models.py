@@ -16,6 +16,7 @@ class Accounts(models.Model):
     modified_time = models.DateTimeField(blank=True, null=True)
     ip = models.CharField(db_column='IP', max_length=35, blank=True, null=True)  # Field name made lowercase.
     created_time = models.DateTimeField(blank=True, null=True)
+    last_deposit_date = models.DateTimeField(blank=True, null=True)
     account_status = models.CharField(max_length=45, blank=True, null=True)
     language = models.CharField(max_length=2, blank=True, null=True)
     recovery_question = models.CharField(db_column='Recovery_Question', max_length=45, blank=True, null=True)  # Field name made lowercase.
@@ -61,6 +62,8 @@ class Accounts(models.Model):
         managed = False
         db_table = 'ACCOUNTS'
 
+        verbose_name_plural = "Accounts"
+        verbose_name = "Account"
 
     def __str__(self):
         return f"{self.account_number} - {self.account_name }"
@@ -94,12 +97,22 @@ class FinancialStatements(models.Model):
     account_number = models.ForeignKey(Accounts, models.DO_NOTHING, db_column='ACCOUNT_NUMBER')  # Field name made lowercase.
     lead_source = models.CharField(max_length=45, blank=True, null=True)
     account_status_at_trx = models.CharField(max_length=45, blank=True, null=True)
+    modified_time = models.CharField(max_length=45, blank=True, null=True)
+    is_real = models.BooleanField()
+    real_amount = models.DecimalField(db_column='Real_Amount', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+
 
     primary_key=True
     class Meta:
         managed = False
         db_table = 'FINANCIAL_STATEMENTS'
         unique_together = (('created_time', 'account_number', 'amount'),)
+
+        verbose_name_plural = "Financial Statements"
+        verbose_name = "Financial Statement"
+
+    def __str__(self):
+        return f"{self.type} at {self.tpa} for {self.usd_amount}"
 
 
 class TradingPlatformAccounts(models.Model):
@@ -168,3 +181,51 @@ class Tickets(models.Model):
     class Meta:
         managed = False
         db_table = 'TICKETS'
+
+
+
+class BaseParams(models.Model):
+    param = models.CharField(primary_key=True, max_length=45)
+    value = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'BASE_PARAMS'
+
+        verbose_name_plural = "Params"
+        verbose_name = "Param"
+
+    def __str__(self):
+        return f"{self.param}: {self.value}"
+
+
+class BaseSalesAgents(models.Model):
+    name = models.CharField(primary_key=True, max_length=45)
+    list_in_reports = models.BooleanField(blank=False, null=False)
+    office = models.ForeignKey('BaseSalesOffices', models.DO_NOTHING, db_column='office', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'BASE_SALES_AGENTS'
+
+        verbose_name_plural = "Sale Agents"
+        verbose_name = "Sale Agent"
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class BaseSalesOffices(models.Model):
+    code = models.CharField(primary_key=True, max_length=2)
+    description = models.CharField(max_length=45, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'BASE_SALES_OFFICES'
+
+    
+        verbose_name_plural = "Sale Offices"
+        verbose_name = "Sale Office"
+
+    def __str__(self):
+        return f"{self.description}"
